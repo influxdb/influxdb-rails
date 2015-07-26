@@ -15,9 +15,8 @@ describe "collecting metrics through ActiveSupport::Notifications", :type => :re
     end
 
     it "should result in attempts to write metrics via the client" do
-      InfluxDB::Rails.client.should_receive(:write_point).exactly(3).times
+      InfluxDB::Rails.client.should_receive(:write_point).exactly(4).times
       get "/widgets"
     end
   end
 end
-

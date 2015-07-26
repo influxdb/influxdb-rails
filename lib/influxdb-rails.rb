@@ -65,7 +65,6 @@ module InfluxDB
       alias_method :transmit, :report_exception
 
       def handle_action_controller_metrics(name, start, finish, id, payload)
-        timestamp = finish.utc.to_i
         controller_runtime = ((finish - start)*1000).ceil
         view_runtime = (payload[:view_runtime] || 0).ceil
         db_runtime = (payload[:db_runtime] || 0).ceil
@@ -81,6 +80,9 @@ module InfluxDB
 
           client.write_point configuration.series_name_for_db_runtimes,
             :value => db_runtime, :method => method, :server => hostname
+
+          client.write_point configuration.series_name_for_status_codes,
+            :value => payload[:status], :method => method, :server => hostname
         rescue => e
           log :error, "[InfluxDB::Rails] Unable to write points: #{e.message}"
         end
