@@ -140,6 +140,15 @@ module InfluxDB
         transmit_unless_ignorable(e)
         raise(e)
       end
+
+      def safely_prepend(module_name, opts = {})
+        return if opts[:to].nil? || opts[:from].nil?
+        if opts[:to].respond_to?(:prepend, true)
+          opts[:to].send(:prepend, opts[:from].const_get(module_name))
+        else
+          opts[:to].send(:include, opts[:from].const_get("Old" + module_name))
+        end
+      end
     end
   end
 end
