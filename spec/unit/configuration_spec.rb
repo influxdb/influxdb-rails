@@ -26,4 +26,20 @@ describe InfluxDB::Rails::Configuration do
       expect(@configuration.ignore_user_agent?("Googlebot/2.1")).to be_falsey
     end
   end
+
+  describe "#retry" do
+    it "defaults to nil" do
+      InfluxDB::Rails.configure do |config|
+      end
+      InfluxDB::Rails.configuration.retry.should be_nil
+    end
+
+    it "can be updated" do
+      InfluxDB::Rails.configure do |config|
+        config.retry = 5
+      end
+      InfluxDB::Rails.configuration.retry.should eql( 5 )
+    end
+  end
+
 end

@@ -37,6 +37,8 @@ module InfluxDB
       attr_accessor :debug
       attr_accessor :reraise_global_exceptions
 
+      attr_accessor :retry
+
       DEFAULTS = {
         :influxdb_hosts => ["localhost"],
         :influxdb_port => 8086,
