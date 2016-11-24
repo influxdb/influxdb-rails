@@ -7,6 +7,7 @@ module InfluxDB
       attr_accessor :influxdb_password
       attr_accessor :influxdb_database
       attr_accessor :async
+      attr_accessor :retry
       attr_accessor :use_ssl
 
       attr_accessor :series_name_for_controller_runtimes

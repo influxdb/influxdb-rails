@@ -37,6 +37,7 @@ module InfluxDB
           :hosts => configuration.influxdb_hosts,
           :port => configuration.influxdb_port,
           :async => configuration.async,
+          :retry => configuration.retry,
           :use_ssl => configuration.use_ssl
       end
 
