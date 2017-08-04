@@ -41,7 +41,7 @@ module InfluxDB
 
         if defined?(ActiveSupport::Notifications)
           ActiveSupport::Notifications.subscribe "process_action.action_controller" do |name, start, finish, id, payload|
-            if InfluxDB::Rails.configuration.instrumentation_enabled  && ! InfluxDB::Rails.configuration.ignore_current_environment?
+            if InfluxDB::Rails.configuration.instrumentation_enabled? && ! InfluxDB::Rails.configuration.ignore_current_environment?
               begin
                 InfluxDB::Rails.handle_action_controller_metrics(name, start, finish, id, payload)
               rescue => e
