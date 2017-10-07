@@ -9,6 +9,7 @@ module InfluxDB
       attr_accessor :async
       attr_accessor :use_ssl
       attr_accessor :retry
+      attr_accessor :time_precision
 
       attr_accessor :series_name_for_controller_runtimes
       attr_accessor :series_name_for_view_runtimes
@@ -50,6 +51,7 @@ module InfluxDB
         :async              => true,
         :use_ssl            => false,
         :retry              => nil,
+        :time_precision     => "s",
 
         :series_name_for_controller_runtimes  => "rails.controller",
         :series_name_for_view_runtimes        => "rails.view",
@@ -93,6 +95,7 @@ module InfluxDB
         @async              = DEFAULTS[:async]
         @use_ssl            = DEFAULTS[:use_ssl]
         @retry              = DEFAULTS[:retry]
+        @time_precision     = DEDAULTS[:time_precision]
 
         @series_name_for_controller_runtimes  = DEFAULTS[:series_name_for_controller_runtimes]
         @series_name_for_view_runtimes        = DEFAULTS[:series_name_for_view_runtimes]
