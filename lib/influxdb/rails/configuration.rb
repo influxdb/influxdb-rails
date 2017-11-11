@@ -9,6 +9,9 @@ module InfluxDB
       attr_accessor :async
       attr_accessor :use_ssl
       attr_accessor :retry
+      attr_accessor :open_timeout
+      attr_accessor :read_timeout
+      attr_accessor :max_delay
 
       attr_accessor :series_name_for_controller_runtimes
       attr_accessor :series_name_for_view_runtimes
@@ -50,6 +53,9 @@ module InfluxDB
         :async              => true,
         :use_ssl            => false,
         :retry              => nil,
+        :open_timeout       => 5,
+        :read_timeout       => 300,
+        :max_delay          => 30,
 
         :series_name_for_controller_runtimes  => "rails.controller",
         :series_name_for_view_runtimes        => "rails.view",
@@ -93,6 +99,9 @@ module InfluxDB
         @async              = DEFAULTS[:async]
         @use_ssl            = DEFAULTS[:use_ssl]
         @retry              = DEFAULTS[:retry]
+        @open_timeout       = DEFAULTS[:open_timeout]
+        @read_timeout       = DEFAULTS[:read_timeout]
+        @max_delay          = DEFAULTS[:max_delay]
 
         @series_name_for_controller_runtimes  = DEFAULTS[:series_name_for_controller_runtimes]
         @series_name_for_view_runtimes        = DEFAULTS[:series_name_for_view_runtimes]

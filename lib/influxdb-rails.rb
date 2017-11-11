@@ -38,7 +38,10 @@ module InfluxDB
           :port => configuration.influxdb_port,
           :async => configuration.async,
           :use_ssl => configuration.use_ssl,
-          :retry => configuration.retry
+          :retry => configuration.retry,
+          :open_timeout => configuration.open_timeout,
+          :read_timeout => configuration.read_timeout,
+          :max_delay => configuration.max_delay
       end
 
       def configuration

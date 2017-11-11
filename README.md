@@ -48,6 +48,12 @@ InfluxDB::Rails.configure do |config|
   config.influxdb_hosts    = ["localhost"]
   config.influxdb_port     = 8086
 
+  # config.retry = false
+  # config.async = false
+  # config.open_timeout = 5
+  # config.read_timeout = 30
+  # config.max_delay = 300
+
   # config.series_name_for_controller_runtimes = "rails.controller"
   # config.series_name_for_view_runtimes       = "rails.view"
   # config.series_name_for_db_runtimes         = "rails.db"

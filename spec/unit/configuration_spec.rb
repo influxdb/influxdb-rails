@@ -42,4 +42,48 @@ RSpec.describe InfluxDB::Rails::Configuration do
     end
   end
 
+  describe "#open_timeout" do
+    it "defaults to 5" do
+      InfluxDB::Rails.configure do |config|
+      end
+      expect(InfluxDB::Rails.configuration.open_timeout).to eql(5)
+    end
+
+    it "can be updated" do
+      InfluxDB::Rails.configure do |config|
+        config.open_timeout = 5
+      end
+      expect(InfluxDB::Rails.configuration.open_timeout).to eql(5)
+    end
+  end
+
+  describe "#read_timeout" do
+    it "defaults to 300" do
+      InfluxDB::Rails.configure do |config|
+      end
+      expect(InfluxDB::Rails.configuration.read_timeout).to eql(300)
+    end
+
+    it "can be updated" do
+      InfluxDB::Rails.configure do |config|
+        config.read_timeout = 5
+      end
+      expect(InfluxDB::Rails.configuration.read_timeout).to eql(5)
+    end
+  end
+
+  describe "#max_delay" do
+    it "defaults to 30" do
+      InfluxDB::Rails.configure do |config|
+      end
+      expect(InfluxDB::Rails.configuration.max_delay).to eql(30)
+    end
+
+    it "can be updated" do
+      InfluxDB::Rails.configure do |config|
+        config.max_delay = 5
+      end
+      expect(InfluxDB::Rails.configuration.max_delay).to eql(5)
+    end
+  end
 end
