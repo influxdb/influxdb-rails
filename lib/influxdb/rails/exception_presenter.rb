@@ -40,7 +40,7 @@ module InfluxDB
 
       def context
         c = {
-          :time => Time.now.utc.to_i,
+          :time => InfluxDB::Rails.current_timestamp,
           :application_name => InfluxDB::Rails.configuration.application_name,
           :application_root => InfluxDB::Rails.configuration.application_root,
           :framework => InfluxDB::Rails.configuration.framework,

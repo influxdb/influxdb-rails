@@ -12,6 +12,7 @@ module InfluxDB
       attr_accessor :open_timeout
       attr_accessor :read_timeout
       attr_accessor :max_delay
+      attr_accessor :time_precision
 
       attr_accessor :series_name_for_controller_runtimes
       attr_accessor :series_name_for_view_runtimes
@@ -58,6 +59,7 @@ module InfluxDB
         :open_timeout       => 5,
         :read_timeout       => 300,
         :max_delay          => 30,
+        :time_precision     => "s",
 
         :series_name_for_controller_runtimes  => "rails.controller",
         :series_name_for_view_runtimes        => "rails.view",
@@ -104,6 +106,7 @@ module InfluxDB
         @open_timeout       = DEFAULTS[:open_timeout]
         @read_timeout       = DEFAULTS[:read_timeout]
         @max_delay          = DEFAULTS[:max_delay]
+        @time_precision     = DEFAULTS[:time_precision]
 
         @series_name_for_controller_runtimes  = DEFAULTS[:series_name_for_controller_runtimes]
         @series_name_for_view_runtimes        = DEFAULTS[:series_name_for_view_runtimes]

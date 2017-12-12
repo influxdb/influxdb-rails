@@ -86,4 +86,19 @@ RSpec.describe InfluxDB::Rails::Configuration do
       expect(InfluxDB::Rails.configuration.max_delay).to eql(5)
     end
   end
+
+  describe "#time_precision" do
+    it "defaults to seconds" do
+      InfluxDB::Rails.configure do |config|
+      end
+      expect(InfluxDB::Rails.configuration.time_precision).to eql('s')
+    end
+
+    it "can be updated" do
+      InfluxDB::Rails.configure do |config|
+        config.time_precision = 'ms'
+      end
+      expect(InfluxDB::Rails.configuration.time_precision).to eql('ms')
+    end
+  end
 end

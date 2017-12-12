@@ -41,7 +41,8 @@ module InfluxDB
           :retry => configuration.retry,
           :open_timeout => configuration.open_timeout,
           :read_timeout => configuration.read_timeout,
-          :max_delay => configuration.max_delay
+          :max_delay => configuration.max_delay,
+          :time_precision => configuration.time_precision
       end
 
       def configuration
@@ -76,7 +77,7 @@ module InfluxDB
       alias_method :transmit, :report_exception
 
       def handle_action_controller_metrics(name, start, finish, id, payload)
-        timestamp = finish.utc.to_i
+        timestamp = convert_timestamp(finish.utc)
         controller_runtime = ((finish - start)*1000).ceil
         view_runtime = (payload[:view_runtime] || 0).ceil
         db_runtime = (payload[:db_runtime] || 0).ceil
@@ -92,6 +93,7 @@ module InfluxDB
               method: method,
               server: hostname,
             },
+            timestamp: timestamp,
           }
 
           client.write_point configuration.series_name_for_view_runtimes, {
@@ -102,6 +104,7 @@ module InfluxDB
               method: method,
               server: hostname,
             },
+            timestamp: timestamp,
           }
 
           client.write_point configuration.series_name_for_db_runtimes, {
@@ -112,14 +115,34 @@ module InfluxDB
               method: method,
               server: hostname,
             },
+            timestamp: timestamp,
           }
         rescue => e
           log :error, "[InfluxDB::Rails] Unable to write points: #{e.message}"
         end
       end
 
+      def convert_timestamp(ts)
+        case configuration.time_precision
+        when 'ns', nil
+          (ts.to_r * 1e9).to_i
+        when 'u'
+          (ts.to_r * 1e6).to_i
+        when 'ms'
+          (ts.to_r * 1e3).to_i
+        when 's'
+          ts.to_i
+        when 'm'
+          ts.to_i / 60
+        when 'h'
+          ts.to_i / 60 / 60
+        else
+          raise "Invalid time precision: #{configuration.time_precision}"
+        end
+      end
+
       def current_timestamp
-        Time.now.utc.to_i
+        convert_timestamp(Time.now.utc)
       end
 
       def ignorable_exception?(e)
