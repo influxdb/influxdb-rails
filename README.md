@@ -53,6 +53,7 @@ InfluxDB::Rails.configure do |config|
   # config.open_timeout = 5
   # config.read_timeout = 30
   # config.max_delay = 300
+  # config.time_precision = 'ms'
 
   # config.series_name_for_controller_runtimes = "rails.controller"
   # config.series_name_for_view_runtimes       = "rails.view"
