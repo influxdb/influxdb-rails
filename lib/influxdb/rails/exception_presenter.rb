@@ -45,8 +45,6 @@ module InfluxDB
           :application_root => InfluxDB::Rails.configuration.application_root,
           :framework => InfluxDB::Rails.configuration.framework,
           :framework_version => InfluxDB::Rails.configuration.framework_version,
-          :message => @exception.message,
-          :backtrace => JSON.generate(@backtrace.to_a),
           :language => "Ruby",
           :language_version => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
           :custom_data => @custom_data
@@ -64,6 +62,13 @@ module InfluxDB
           :server => Socket.gethostname,
           :status => "open"
         }.merge(@dimensions)
+      end
+
+      def values
+        {
+          :message => @exception.message,
+          :backtrace => JSON.generate(@backtrace.to_a),
+        }
       end
 
       def request_data
