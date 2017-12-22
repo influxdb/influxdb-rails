@@ -64,9 +64,9 @@ module InfluxDB
           timestamp = ex_data.delete(:time)
 
           client.write_point "rails.exceptions", {
-            values: {
-              ts: timestamp,
-            },
+            values: exception_presenter.values.merge(
+              ts: timestamp
+            ),
             tags: ex_data,
             timestamp: timestamp,
           }
