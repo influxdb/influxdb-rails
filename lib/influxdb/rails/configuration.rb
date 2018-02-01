@@ -18,6 +18,8 @@ module InfluxDB
       attr_accessor :series_name_for_view_runtimes
       attr_accessor :series_name_for_db_runtimes
 
+      attr_accessor :rails_app_name
+
       attr_accessor :application_id
       deprecate :application_id => "This method serve no purpose and will be removed in the release after 0.1.12"
 
@@ -65,6 +67,8 @@ module InfluxDB
         :series_name_for_view_runtimes        => "rails.view",
         :series_name_for_db_runtimes          => "rails.db",
 
+        :rails_app_name => 'my-rails-app',
+
         :ignored_exceptions => %w{ActiveRecord::RecordNotFound
                                   ActionController::RoutingError},
         :ignored_exception_messages => [],
@@ -111,6 +115,8 @@ module InfluxDB
         @series_name_for_controller_runtimes  = DEFAULTS[:series_name_for_controller_runtimes]
         @series_name_for_view_runtimes        = DEFAULTS[:series_name_for_view_runtimes]
         @series_name_for_db_runtimes          = DEFAULTS[:series_name_for_db_runtimes]
+
+        @rails_app_name = DEFAULTS[:rails_app_name]
 
         @ignored_exceptions           = DEFAULTS[:ignored_exceptions].dup
         @ignored_exception_messages   = DEFAULTS[:ignored_exception_messages].dup

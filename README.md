@@ -58,6 +58,8 @@ InfluxDB::Rails.configure do |config|
   # config.series_name_for_controller_runtimes = "rails.controller"
   # config.series_name_for_view_runtimes       = "rails.view"
   # config.series_name_for_db_runtimes         = "rails.db"
+
+  config.rails_app_name = "my-rails-app"
 end
 ```
 

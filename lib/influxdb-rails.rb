@@ -83,6 +83,7 @@ module InfluxDB
         db_runtime = (payload[:db_runtime] || 0).ceil
         method = "#{payload[:controller]}##{payload[:action]}"
         hostname = Socket.gethostname
+        app_name = configuration.rails_app_name
 
         begin
           client.write_point configuration.series_name_for_controller_runtimes, {
@@ -90,8 +91,9 @@ module InfluxDB
               value: controller_runtime,
             },
             tags: {
-              method: method,
-              server: hostname,
+              method:   method,
+              server:   hostname,
+              app_name: app_name
             },
             timestamp: timestamp,
           }
@@ -101,8 +103,9 @@ module InfluxDB
               value: view_runtime,
             },
             tags: {
-              method: method,
-              server: hostname,
+              method:   method,
+              server:   hostname,
+              app_name: app_name
             },
             timestamp: timestamp,
           }
@@ -112,8 +115,9 @@ module InfluxDB
               value: db_runtime,
             },
             tags: {
-              method: method,
-              server: hostname,
+              method:   method,
+              server:   hostname,
+              app_name: app_name
             },
             timestamp: timestamp,
           }
