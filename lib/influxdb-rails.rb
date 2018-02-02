@@ -31,7 +31,8 @@ module InfluxDB
       end
 
       def client
-        @client ||= InfluxDB::Client.new configuration.influxdb_database,
+        @client ||= InfluxDB::Client.new(
+          configuration.influxdb_database,
           :username => configuration.influxdb_username,
           :password => configuration.influxdb_password,
           :hosts => configuration.influxdb_hosts,
@@ -43,6 +44,7 @@ module InfluxDB
           :read_timeout => configuration.read_timeout,
           :max_delay => configuration.max_delay,
           :time_precision => configuration.time_precision
+        )
       end
 
       def configuration
@@ -86,41 +88,50 @@ module InfluxDB
         app_name = configuration.rails_app_name
 
         begin
-          client.write_point configuration.series_name_for_controller_runtimes, {
-            values: {
-              value: controller_runtime,
-            },
-            tags: {
-              method:   method,
-              server:   hostname,
-              app_name: app_name
-            },
-            timestamp: timestamp,
-          }
+          client.write_point(
+            configuration.series_name_for_controller_runtimes,
+            {
+              values: {
+                value: controller_runtime,
+              },
+              tags: {
+                method:   method,
+                server:   hostname,
+                app_name: app_name
+              }.compact,
+              timestamp: timestamp,
+            }
+          )
 
-          client.write_point configuration.series_name_for_view_runtimes, {
-            values: {
-              value: view_runtime,
-            },
-            tags: {
-              method:   method,
-              server:   hostname,
-              app_name: app_name
-            },
-            timestamp: timestamp,
-          }
+          client.write_point(
+            configuration.series_name_for_view_runtimes,
+            {
+              values: {
+                value: view_runtime,
+              },
+              tags: {
+                method:   method,
+                server:   hostname,
+                app_name: app_name
+              }.compact,
+              timestamp: timestamp,
+            }
+          )
 
-          client.write_point configuration.series_name_for_db_runtimes, {
-            values: {
-              value: db_runtime,
-            },
-            tags: {
-              method:   method,
-              server:   hostname,
-              app_name: app_name
-            },
-            timestamp: timestamp,
-          }
+          client.write_point(
+            configuration.series_name_for_db_runtimes,
+            {
+              values: {
+                value: db_runtime,
+              },
+              tags: {
+                method:   method,
+                server:   hostname,
+                app_name: app_name
+              }.compact,
+              timestamp: timestamp,
+            }
+          )
         rescue => e
           log :error, "[InfluxDB::Rails] Unable to write points: #{e.message}"
         end

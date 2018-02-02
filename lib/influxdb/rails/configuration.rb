@@ -67,7 +67,7 @@ module InfluxDB
         :series_name_for_view_runtimes        => "rails.view",
         :series_name_for_db_runtimes          => "rails.db",
 
-        :rails_app_name => 'my-rails-app',
+        :rails_app_name => nil,
 
         :ignored_exceptions => %w{ActiveRecord::RecordNotFound
                                   ActionController::RoutingError},
