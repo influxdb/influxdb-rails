@@ -76,6 +76,7 @@ module InfluxDB
           log :info, "[InfluxDB::Rails] Something went terribly wrong. Exception failed to take off! #{e.class}: #{e.message}"
         end
       end
+
       alias_method :transmit, :report_exception
 
       def handle_action_controller_metrics(name, start, finish, id, payload)
@@ -87,49 +88,34 @@ module InfluxDB
         hostname = Socket.gethostname
         app_name = configuration.rails_app_name
 
+        tags = { method: method, server: hostname, app_name: app_name }
+        tags.delete_if { |k, v| v.nil? }
+
         begin
           client.write_point(
             configuration.series_name_for_controller_runtimes,
             {
-              values: {
-                value: controller_runtime,
-              },
-              tags: {
-                method:   method,
-                server:   hostname,
-                app_name: app_name
-              }.compact,
-              timestamp: timestamp,
+              values:     { value: controller_runtime },
+              tags:       tags,
+              timestamp:  timestamp,
             }
           )
 
           client.write_point(
             configuration.series_name_for_view_runtimes,
             {
-              values: {
-                value: view_runtime,
-              },
-              tags: {
-                method:   method,
-                server:   hostname,
-                app_name: app_name
-              }.compact,
-              timestamp: timestamp,
+              values:     { value: view_runtime },
+              tags:       tags,
+              timestamp:  timestamp,
             }
           )
 
           client.write_point(
             configuration.series_name_for_db_runtimes,
             {
-              values: {
-                value: db_runtime,
-              },
-              tags: {
-                method:   method,
-                server:   hostname,
-                app_name: app_name
-              }.compact,
-              timestamp: timestamp,
+              values:     { value: db_runtime },
+              tags:       tags,
+              timestamp:  timestamp,
             }
           )
         rescue => e
