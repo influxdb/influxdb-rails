@@ -2,7 +2,62 @@ require 'spec_helper'
 
 RSpec.describe InfluxDB::Rails do
   before do
-    InfluxDB::Rails.configure { |config| config.ignored_environments = [] }
+    InfluxDB::Rails.configure do |config|
+      config.rails_app_name = 'my-rails-app'
+      config.ignored_environments = []
+    end
+  end
+
+  describe '.handle_action_controller_metrics' do
+    let(:start)   { Time.at(1517567368) }
+    let(:finish)  { Time.at(1517567370) }
+    let(:payload) { { view_runtime: 2, db_runtime: 2, controller: 'MyController', action: 'show' } }
+    let(:data)    {
+      {
+        values: {
+          value: 2
+        },
+        tags: {
+          method: 'MyController#show',
+          server: Socket.gethostname,
+          app_name: 'my-rails-app'
+        },
+        timestamp: 1517567370000
+      }
+    }
+
+    context 'rails_app_name is set' do
+      it 'sends metrics with taggings and timestamps' do
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
+          'rails.controller', data.merge({ values: { value: 2000}})
+        )
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with('rails.view', data)
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with('rails.db', data)
+
+        described_class.handle_action_controller_metrics('unused', start, finish, 'unused', payload)
+      end
+    end
+
+    context 'rails_app_name is nil' do
+      before do
+        InfluxDB::Rails.configure do |config|
+          config.rails_app_name = nil
+          config.ignored_environments = []
+        end
+      end
+
+      it 'doesn not add the app_name tag to metrics' do
+        tags = { method: 'MyController#show', server: Socket.gethostname }
+
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
+          'rails.controller', data.merge({ values: { value: 2000}, tags: tags })
+        )
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with('rails.view', data.merge(tags: tags))
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with('rails.db', data.merge(tags: tags))
+
+        described_class.handle_action_controller_metrics('unused', start, finish, 'unused', payload)
+      end
+    end
   end
 
   describe '.convert_timestamp' do

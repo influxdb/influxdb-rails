@@ -101,4 +101,18 @@ RSpec.describe InfluxDB::Rails::Configuration do
       expect(InfluxDB::Rails.configuration.time_precision).to eql('ms')
     end
   end
+
+  describe "#rails_app_name" do
+    it 'defaults to nil' do
+      expect(InfluxDB::Rails.configuration.rails_app_name).to be(nil)
+    end
+
+    it "can be set to own name" do
+      InfluxDB::Rails.configure do |config|
+        config.rails_app_name = 'my-app'
+      end
+
+      expect(InfluxDB::Rails.configuration.rails_app_name).to eq('my-app')
+    end
+  end
 end
