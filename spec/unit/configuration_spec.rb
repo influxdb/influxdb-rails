@@ -105,4 +105,21 @@ RSpec.describe InfluxDB::Rails::Configuration do
       expect(InfluxDB::Rails.configuration.rails_app_name).to eq('my-app')
     end
   end
+
+  describe "#tags_middleware" do
+    let(:middleware) { InfluxDB::Rails.configuration.tags_middleware }
+    let(:tags_example) { {a: 1, b: 2} }
+
+    it 'by default returns unmodified tags' do
+      expect(middleware.call(tags_example)).to eq tags_example
+    end
+
+    it "can be updated" do
+      InfluxDB::Rails.configure do |config|
+        config.tags_middleware = ->(tags) { tags.merge(c: 3) }
+      end
+
+      expect(middleware.call(tags_example)).to eq(tags_example.merge(c: 3))
+    end
+  end
 end

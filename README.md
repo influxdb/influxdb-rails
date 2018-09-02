@@ -48,6 +48,8 @@ InfluxDB::Rails.configure do |config|
   # config.max_delay = 300
   # config.time_precision = 'ms'
 
+  # config.tags_middleware = ->(tags) { tags }
+
   # config.series_name_for_controller_runtimes = "rails.controller"
   # config.series_name_for_view_runtimes       = "rails.view"
   # config.series_name_for_db_runtimes         = "rails.db"
@@ -71,6 +73,16 @@ underlying `InfluxDB::Client` object to write arbitrary data like this:
 InfluxDB::Rails.client.write_point "events",
   tags:   { url: "/foo", user_id: current_user.id },
   values: { value: 0 }
+```
+
+You can modify tags, are going to be sent to InfluxDB by defining the `tags_middleware`.
+
+```ruby
+InfluxDB::Rails.configure do |config|
+  config.tags_middleware = ->(tags) do
+    tags.merge(env: Rails.env)
+  end
+end
 ```
 
 Additional documentation for `InfluxDB::Client` lives in the

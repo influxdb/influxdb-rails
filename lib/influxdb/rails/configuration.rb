@@ -22,6 +22,8 @@ module InfluxDB
       attr_accessor :series_name_for_exceptions
       attr_accessor :series_name_for_instrumentation
 
+      attr_accessor :tags_middleware
+
       attr_accessor :rails_app_name
 
       attr_accessor :application_name
@@ -66,6 +68,7 @@ module InfluxDB
         series_name_for_exceptions:           "rails.exceptions".freeze,
         series_name_for_instrumentation:      "instrumentation".freeze,
 
+        tags_middleware: ->(tags) { tags },
         rails_app_name: nil,
 
         ignored_exceptions: %w[
@@ -124,6 +127,7 @@ module InfluxDB
         @series_name_for_exceptions           = DEFAULTS[:series_name_for_exceptions]
         @series_name_for_instrumentation      = DEFAULTS[:series_name_for_instrumentation]
 
+        @tags_middleware = DEFAULTS[:tags_middleware]
         @rails_app_name = DEFAULTS[:rails_app_name]
 
         @ignored_exceptions           = DEFAULTS[:ignored_exceptions].dup
