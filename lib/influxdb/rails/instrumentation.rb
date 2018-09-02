@@ -13,10 +13,10 @@ module InfluxDB
           values: {
             value: ((Time.now - start) * 1000).ceil,
           },
-          tags: {
+          tags: configuration.tags_middleware.call(
             method: "#{controller_name}##{action_name}",
             server: Socket.gethostname,
-          }
+          )
       end
 
       def self.included(base)

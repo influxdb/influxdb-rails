@@ -69,11 +69,14 @@ module InfluxDB
         env = influxdb_request_data if env.empty? && defined? influxdb_request_data
         exception_presenter = ExceptionPresenter.new(e, env)
         log :info, "Exception: #{exception_presenter.to_json[0..512]}..."
+        tags = configuration.tags_middleware.call(
+          exception_presenter.context.merge(exception_presenter.dimensions)
+        )
 
         client.write_point \
           configuration.series_name_for_exceptions,
           values:    exception_presenter.values.merge(ts: timestamp),
-          tags:      exception_presenter.context.merge(exception_presenter.dimensions),
+          tags:      tags,
           timestamp: timestamp
       rescue StandardError => e
         log :info, "[InfluxDB::Rails] Something went terribly wrong." \
@@ -82,11 +85,11 @@ module InfluxDB
       alias transmit report_exception
 
       def handle_action_controller_metrics(_name, start, finish, _id, payload)
-        tags = {
+        tags = configuration.tags_middleware.call({
           method:   "#{payload[:controller]}##{payload[:action]}",
           server:   Socket.gethostname,
           app_name: configuration.application_name,
-        }.reject { |_, value| value.nil? }
+        }.reject { |_, value| value.nil? })
 
         ts = convert_timestamp(finish.utc)
 
