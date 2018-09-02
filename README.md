@@ -75,7 +75,9 @@ InfluxDB::Rails.client.write_point "events",
   values: { value: 0 }
 ```
 
-You can modify tags, are going to be sent to InfluxDB by defining the `tags_middleware`.
+### Tags
+
+You can modify tags, that are sent to InfluxDB by defining the `tags_middleware`.
 
 ```ruby
 InfluxDB::Rails.configure do |config|
@@ -83,6 +85,35 @@ InfluxDB::Rails.configure do |config|
     tags.merge(env: Rails.env)
   end
 end
+```
+
+By default, the following tags are sent for **actions series**:
+
+```ruby
+{
+  method:   "#{payload[:controller]}##{payload[:action]}",
+  server:   Socket.gethostname,
+  app_name: configuration.application_name,
+}
+```
+
+and for the exceptions:
+
+```ruby
+{
+  application_name:   InfluxDB::Rails.configuration.application_name,
+  application_root:   InfluxDB::Rails.configuration.application_root,
+  framework:          InfluxDB::Rails.configuration.framework,
+  framework_version:  InfluxDB::Rails.configuration.framework_version,
+  language:           "Ruby",
+  language_version:   "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
+  custom_data:        @custom_data,
+  class:    @exception.class.to_s,
+  method:   "#{@controller}##{@action}",
+  filename: File.basename(@backtrace.lines.first.try(:file)),
+  server:   Socket.gethostname,
+  status:   "open",
+}
 ```
 
 Additional documentation for `InfluxDB::Client` lives in the
