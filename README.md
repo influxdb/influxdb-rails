@@ -75,6 +75,9 @@ InfluxDB::Rails.client.write_point "events",
   values: { value: 0 }
 ```
 
+Additional documentation for `InfluxDB::Client` lives in the
+[influxdb-ruby](http://github.com/influxdata/influxdb-ruby) repo.
+
 ### Tags
 
 You can modify tags, that are sent to InfluxDB by defining the `tags_middleware`.
@@ -115,9 +118,6 @@ and for the exceptions:
   status:   "open",
 }
 ```
-
-Additional documentation for `InfluxDB::Client` lives in the
-[influxdb-ruby](http://github.com/influxdata/influxdb-ruby) repo.
 
 ## Frequently Asked Questions
 
