@@ -84,7 +84,7 @@ You can modify tags, that are sent to InfluxDB by defining the `tags_middleware`
 
 ```ruby
 InfluxDB::Rails.configure do |config|
-  config.tags_middleware = ->(tags) do
+  config.tags_middleware = lambda do |tags|
     tags.merge(env: Rails.env)
   end
 end
