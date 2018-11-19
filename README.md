@@ -27,7 +27,7 @@ To get things set up, just create an initializer:
 
 ```
 $ cd /to/you/rails/application
-$ touch config/initializers/influxdb-rails.rb
+$ touch config/initializers/influxdb_rails.rb
 ```
 
 In this file, you can configure the `InfluxDB::Rails` adapter. The default
