@@ -83,9 +83,13 @@ module InfluxDB
 
       def handle_action_controller_metrics(_name, start, finish, _id, payload)
         tags = {
-          method:   "#{payload[:controller]}##{payload[:action]}",
-          server:   Socket.gethostname,
-          app_name: configuration.application_name,
+          method:        "#{payload[:controller]}##{payload[:action]}",
+          status:        payload[:status],
+          format:        payload[:format],
+          http_method:   payload[:method],
+          path:          payload[:path],
+          server:        Socket.gethostname,
+          app_name:      configuration.application_name,
         }.reject { |_, value| value.nil? }
 
         ts = convert_timestamp(finish.utc)
