@@ -1,7 +1,7 @@
 module InfluxDB
   module Rails
     module Instrumentation # rubocop:disable Style/Documentation
-      def benchmark_for_instrumentationn # rubocop:disable Metrics/MethodLength
+      def benchmark_for_instrumentation # rubocop:disable Metrics/MethodLength
         start = Time.now
         yield
 
