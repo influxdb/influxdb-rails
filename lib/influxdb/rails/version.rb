@@ -1,5 +1,5 @@
 module InfluxDB
   module Rails
-    VERSION = "0.4.3".freeze
+    VERSION = "1.0.0.beta1".freeze
   end
 end

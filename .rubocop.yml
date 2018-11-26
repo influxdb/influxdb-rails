@@ -10,7 +10,7 @@ AllCops:
   - 'Gemfile'
   DisplayCopNames: true
   StyleGuideCopsOnly: false
-  TargetRubyVersion: 2.2
+  TargetRubyVersion: 2.3
 
 Rails:
   Enabled: false
@@ -20,6 +20,10 @@ Layout/EmptyLinesAroundArguments:
 
 Layout/SpaceBeforeBlockBraces:
   EnforcedStyleForEmptyBraces: space
+
+Layout/AlignHash:
+  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: table
 
 Metrics/AbcSize:
   Max: 20
@@ -40,6 +44,13 @@ Metrics/ModuleLength:
 Metrics/ParameterLists:
   Max: 6
 
+Naming/UncommunicativeMethodParamName:
+  AllowedNames: [io, id, db, ex]
+
+Naming/FileName:
+  Exclude:
+  - lib/influxdb-rails.rb
+
 Style/FormatStringToken:
   Enabled: false
 
@@ -53,10 +64,14 @@ Style/RescueModifier:
   Enabled: false
 
 Style/StringLiterals:
-  Enabled: false
+  EnforcedStyle: double_quotes
 
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: comma
   Exclude:
   - "spec/**/*.rb"
 
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+  Exclude:
+  - "spec/**/*.rb"

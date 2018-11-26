@@ -8,7 +8,8 @@ module InfluxDB
       def log(level, message)
         c = InfluxDB::Rails.configuration
         return if level != :error && !c.debug?
-        c.logger.send(level, PREFIX + message) if c.logger
+
+        c.logger&.send(level, PREFIX + message)
       end
     end
   end

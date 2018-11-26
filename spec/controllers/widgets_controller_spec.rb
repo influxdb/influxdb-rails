@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe WidgetsController, type: :controller do
   describe "#new" do

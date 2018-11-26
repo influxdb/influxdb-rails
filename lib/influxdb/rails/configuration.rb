@@ -49,38 +49,38 @@ module InfluxDB
       attr_accessor :debug
 
       DEFAULTS = {
-        influxdb_hosts:     ["localhost"].freeze,
-        influxdb_port:      8086,
-        influxdb_username:  "root".freeze,
-        influxdb_password:  "root".freeze,
-        influxdb_database:  nil,
-        async:              true,
-        use_ssl:            false,
-        retry:              nil,
-        open_timeout:       5,
-        read_timeout:       300,
-        max_delay:          30,
-        time_precision:     "s".freeze,
+        influxdb_hosts:                      ["localhost"].freeze,
+        influxdb_port:                       8086,
+        influxdb_username:                   "root".freeze,
+        influxdb_password:                   "root".freeze,
+        influxdb_database:                   nil,
+        async:                               true,
+        use_ssl:                             false,
+        retry:                               nil,
+        open_timeout:                        5,
+        read_timeout:                        300,
+        max_delay:                           30,
+        time_precision:                      "s".freeze,
 
-        series_name_for_controller_runtimes:  "rails.controller".freeze,
-        series_name_for_view_runtimes:        "rails.view".freeze,
-        series_name_for_db_runtimes:          "rails.db".freeze,
-        series_name_for_exceptions:           "rails.exceptions".freeze,
-        series_name_for_instrumentation:      "instrumentation".freeze,
+        series_name_for_controller_runtimes: "rails.controller".freeze,
+        series_name_for_view_runtimes:       "rails.view".freeze,
+        series_name_for_db_runtimes:         "rails.db".freeze,
+        series_name_for_exceptions:          "rails.exceptions".freeze,
+        series_name_for_instrumentation:     "instrumentation".freeze,
 
-        tags_middleware: ->(tags) { tags },
-        rails_app_name: nil,
+        tags_middleware:                     ->(tags) { tags },
+        rails_app_name:                      nil,
 
-        ignored_exceptions: %w[
+        ignored_exceptions:                  %w[
           ActiveRecord::RecordNotFound
           ActionController::RoutingError
         ].freeze,
 
-        ignored_exception_messages:   [].freeze,
-        ignored_reports:              [].freeze,
-        ignored_environments:         %w[test cucumber selenium].freeze,
-        ignored_user_agents:          %w[GoogleBot].freeze,
-        environment_variable_filters: [
+        ignored_exception_messages:          [].freeze,
+        ignored_reports:                     [].freeze,
+        ignored_environments:                %w[test cucumber selenium].freeze,
+        ignored_user_agents:                 %w[GoogleBot].freeze,
+        environment_variable_filters:        [
           /password/i,
           /key/i,
           /secret/i,
@@ -89,10 +89,11 @@ module InfluxDB
           /color/i,
         ].freeze,
 
-        backtrace_filters: [
+        backtrace_filters:                   [
           ->(line) { line.gsub(%r{^\./}, "") },
           lambda { |line|
             return line if InfluxDB::Rails.configuration.application_root.to_s.empty?
+
             line.gsub(/#{InfluxDB::Rails.configuration.application_root}/, "[APP_ROOT]")
           },
           lambda { |line|
@@ -157,6 +158,7 @@ module InfluxDB
 
       def ignore_user_agent?(incoming_user_agent)
         return false if ignored_user_agents.nil?
+
         ignored_user_agents.any? { |agent| incoming_user_agent =~ /#{agent}/ }
       end
 
@@ -164,9 +166,9 @@ module InfluxDB
         ignored_environments.include?(environment)
       end
 
-      def ignore_exception?(e)
-        !ignored_exception_messages.find { |msg| /.*#{msg}.*/ =~ e.message }.nil? ||
-          ignored_exceptions.include?(e.class.to_s)
+      def ignore_exception?(ex)
+        !ignored_exception_messages.find { |msg| /.*#{msg}.*/ =~ ex.message }.nil? ||
+          ignored_exceptions.include?(ex.class.to_s)
       end
 
       def define_custom_exception_data(&block)
@@ -174,7 +176,7 @@ module InfluxDB
       end
 
       def add_custom_exception_data(exception_presenter)
-        @custom_exception_data_handler.call(exception_presenter) if @custom_exception_data_handler
+        @custom_exception_data_handler&.call(exception_presenter)
       end
 
       def load_rails_defaults

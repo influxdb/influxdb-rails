@@ -56,18 +56,18 @@ module InfluxDB
         @configuration ||= InfluxDB::Rails::Configuration.new
       end
 
-      def report_exception_unless_ignorable(e, env = {})
-        report_exception(e, env) unless ignorable_exception?(e)
+      def report_exception_unless_ignorable(ex, env = {})
+        report_exception(ex, env) unless ignorable_exception?(ex)
       end
       alias transmit_unless_ignorable report_exception_unless_ignorable
 
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
 
-      def report_exception(e, env = {})
+      def report_exception(ex, env = {})
         timestamp = InfluxDB::Rails.current_timestamp
         env = influxdb_request_data if env.empty? && defined? influxdb_request_data
-        exception_presenter = ExceptionPresenter.new(e, env)
+        exception_presenter = ExceptionPresenter.new(ex, env)
         log :info, "Exception: #{exception_presenter.to_json[0..512]}..."
         tags = configuration.tags_middleware.call(
           exception_presenter.context.merge(exception_presenter.dimensions)
@@ -78,17 +78,21 @@ module InfluxDB
           values:    exception_presenter.values.merge(ts: timestamp),
           tags:      tags,
           timestamp: timestamp
-      rescue StandardError => e
+      rescue StandardError => ex
         log :info, "[InfluxDB::Rails] Something went terribly wrong." \
-          " Exception failed to take off! #{e.class}: #{e.message}"
+          " Exception failed to take off! #{ex.class}: #{ex.message}"
       end
       alias transmit report_exception
 
       def handle_action_controller_metrics(_name, start, finish, _id, payload)
         tags = configuration.tags_middleware.call({
-          method:   "#{payload[:controller]}##{payload[:action]}",
-          server:   Socket.gethostname,
-          app_name: configuration.application_name,
+          method:      "#{payload[:controller]}##{payload[:action]}",
+          status:      payload[:status],
+          format:      payload[:format],
+          http_method: payload[:method],
+          path:        payload[:path],
+          server:      Socket.gethostname,
+          app_name:    configuration.application_name,
         }.reject { |_, value| value.nil? })
 
         ts = convert_timestamp(finish.utc)
@@ -110,44 +114,45 @@ module InfluxDB
       # rubocop:enable Metrics/AbcSize
 
       TIMESTAMP_CONVERSIONS = {
-        "ns"  => 1e9.to_r,
-        nil   => 1e9.to_r,
-        "u"   => 1e6.to_r,
-        "ms"  => 1e3.to_r,
-        "s"   => 1.to_r,
-        "m"   => 1.to_r / 60,
-        "h"   => 1.to_r / 60 / 60,
+        "ns" => 1e9.to_r,
+        nil  => 1e9.to_r,
+        "u"  => 1e6.to_r,
+        "ms" => 1e3.to_r,
+        "s"  => 1.to_r,
+        "m"  => 1.to_r / 60,
+        "h"  => 1.to_r / 60 / 60,
       }.freeze
       private_constant :TIMESTAMP_CONVERSIONS
 
-      def convert_timestamp(ts)
+      def convert_timestamp(time)
         conv = TIMESTAMP_CONVERSIONS.fetch(configuration.time_precision) do
           raise "Invalid time precision: #{configuration.time_precision}"
         end
 
-        (ts.to_r * conv).to_i
+        (time.to_r * conv).to_i
       end
 
       def current_timestamp
         convert_timestamp(Time.now.utc)
       end
 
-      def ignorable_exception?(e)
-        configuration.ignore_current_environment? || configuration.ignore_exception?(e)
+      def ignorable_exception?(ex)
+        configuration.ignore_current_environment? || configuration.ignore_exception?(ex)
       end
 
       def rescue
         yield
-      rescue StandardError => e
-        raise(e) if configuration.ignore_current_environment?
-        transmit_unless_ignorable(e)
+      rescue StandardError => ex
+        raise ex if configuration.ignore_current_environment?
+
+        transmit_unless_ignorable(ex)
       end
 
       def rescue_and_reraise
         yield
-      rescue StandardError => e
-        transmit_unless_ignorable(e)
-        raise(e)
+      rescue StandardError => ex
+        transmit_unless_ignorable(ex)
+        raise ex
       end
     end
   end

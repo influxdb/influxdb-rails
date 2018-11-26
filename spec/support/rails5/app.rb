@@ -1,8 +1,9 @@
-require 'action_controller/railtie'
+require "action_controller/railtie"
 
 app = Class.new(Rails::Application)
-app.config.secret_token = '1234567890abcdef1234567890abcdef'
-app.config.session_store :cookie_store, key: '_myapp_session'
+app.config.secret_key_base = "1234567890abcdef1234567890abcdef"
+app.config.secret_token = "1234567890abcdef1234567890abcdef"
+app.config.session_store :cookie_store, key: "_myapp_session"
 app.config.active_support.deprecation = :log
 app.config.eager_load = false
 app.config.root = File.dirname(__FILE__)

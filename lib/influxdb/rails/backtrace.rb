@@ -2,7 +2,7 @@ module InfluxDB
   module Rails
     class Backtrace # rubocop:disable Style/Documentation
       class Line # rubocop:disable Style/Documentation
-        FORMAT = /^((?:[a-zA-Z]:)?[^:]+):(\d+)(?::in `([^']+)')?$/
+        FORMAT = /^((?:[a-zA-Z]:)?[^:]+):(\d+)(?::in `([^']+)')?$/.freeze
 
         attr_reader :file
         attr_reader :number

@@ -18,11 +18,11 @@ module InfluxDB
       attr_reader :user_agent
       attr_reader :custom_data
 
-      def initialize(e, params = {})
-        e = e.continued_exception if e.respond_to?(:continued_exception)
-        e = e.original_exception if e.respond_to?(:original_exception)
+      def initialize(ex, params = {})
+        ex = ex.continued_exception if ex.respond_to?(:continued_exception)
+        ex = ex.original_exception if ex.respond_to?(:original_exception)
 
-        @exception    = e.is_a?(String) ? Exception.new(e) : e
+        @exception    = ex.is_a?(String) ? Exception.new(ex) : ex
         @backtrace    = InfluxDB::Rails::Backtrace.new(@exception.backtrace)
         @dimensions   = {}
         configure_from_params(params)
@@ -32,13 +32,13 @@ module InfluxDB
 
       def context # rubocop:disable Metrics/MethodLength
         c = {
-          application_name:   InfluxDB::Rails.configuration.application_name,
-          application_root:   InfluxDB::Rails.configuration.application_root,
-          framework:          InfluxDB::Rails.configuration.framework,
-          framework_version:  InfluxDB::Rails.configuration.framework_version,
-          language:           "Ruby",
-          language_version:   "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
-          custom_data:        @custom_data,
+          application_name:  InfluxDB::Rails.configuration.application_name,
+          application_root:  InfluxDB::Rails.configuration.application_root,
+          framework:         InfluxDB::Rails.configuration.framework,
+          framework_version: InfluxDB::Rails.configuration.framework_version,
+          language:          "Ruby",
+          language_version:  "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
+          custom_data:       @custom_data,
         }
 
         InfluxDB::Rails.configuration.add_custom_exception_data(self)

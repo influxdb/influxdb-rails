@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe InfluxDB::Rails::Backtrace do
   before do

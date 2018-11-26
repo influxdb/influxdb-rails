@@ -1,7 +1,7 @@
 module InfluxDB
   module Rails
     module Instrumentation # rubocop:disable Style/Documentation
-      def benchmark_for_instrumentationn # rubocop:disable Metrics/MethodLength
+      def benchmark_for_instrumentation # rubocop:disable Metrics/MethodLength
         start = Time.now
         yield
 
@@ -13,9 +13,9 @@ module InfluxDB
           values: {
             value: ((Time.now - start) * 1000).ceil,
           },
-          tags: configuration.tags_middleware.call(
+          tags:   configuration.tags_middleware.call(
             method: "#{controller_name}##{action_name}",
-            server: Socket.gethostname,
+            server: Socket.gethostname
           )
       end
 
