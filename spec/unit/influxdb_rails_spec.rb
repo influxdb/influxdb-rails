@@ -12,7 +12,7 @@ RSpec.describe InfluxDB::Rails do
   describe ".handle_action_controller_metrics" do
     let(:start)   { Time.at(1_517_567_368) }
     let(:finish)  { Time.at(1_517_567_370) }
-    let(:payload) { { view_runtime: 2, db_runtime: 2, controller: "MyController", action: "show", method: "GET", format: "*/*", path: "/posts", status: 200 } }
+    let(:payload) { { view_runtime: 2, db_runtime: 2, controller: "MyController", action: "show", method: "GET", format: "*/*", status: 200 } }
     let(:data)    do
       {
         values:    {
@@ -23,7 +23,6 @@ RSpec.describe InfluxDB::Rails do
           status:      200,
           format:      "*/*",
           http_method: "GET",
-          path:        "/posts",
           server:      Socket.gethostname,
           app_name:    "my-rails-app",
         },
@@ -56,7 +55,6 @@ RSpec.describe InfluxDB::Rails do
           status:      200,
           format:      "*/*",
           http_method: "GET",
-          path:        "/posts",
           server:      Socket.gethostname,
         }
 

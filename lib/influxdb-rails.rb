@@ -87,7 +87,6 @@ module InfluxDB
           status:      payload[:status],
           format:      payload[:format],
           http_method: payload[:method],
-          path:        payload[:path],
           server:      Socket.gethostname,
           app_name:    configuration.application_name,
         }.reject { |_, value| value.nil? }
