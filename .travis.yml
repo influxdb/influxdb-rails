@@ -5,6 +5,10 @@ before_install:
   - gem update --system --no-doc
   - gem install bundler --no-doc
   - gem update bundler --no-doc
+jobs:
+  include:
+    - stage: "Linting"
+      script: bundle exec rubocop
 rvm:
   - ruby-head
   - 2.5.3
