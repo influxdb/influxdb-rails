@@ -4,6 +4,7 @@ RSpec.describe WidgetsController, type: :controller do
   render_views
 
   before do
+    allow(Thread).to receive(:new).and_yield # do not run in background in test, otherwise it is flaky
     allow_any_instance_of(InfluxDB::Rails::Configuration).to receive(:ignored_environments).and_return(%w[development])
   end
 

@@ -8,7 +8,7 @@ module InfluxDB
         app.config.middleware.insert 0, InfluxDB::Rails::Rack
       end
 
-      config.after_initialize do
+      config.after_initialize do # rubocop:disable Metrics/BlockLength
         InfluxDB::Rails.configure(true, &:load_rails_defaults)
 
         ActiveSupport.on_load(:action_controller) do
@@ -33,13 +33,16 @@ module InfluxDB
           ActiveSupport::Notifications.subscribe "process_action.action_controller", requests
 
           templates = Middleware::RenderSubscriber.new(c, c.series_name_for_render_template)
-          ActiveSupport::Notifications.subscribe "render_template.action_view", templates
+          async_templates = Middleware::AsyncSubscriber.new(templates)
+          ActiveSupport::Notifications.subscribe "render_template.action_view", async_templates
 
           partials = Middleware::RenderSubscriber.new(c, c.series_name_for_render_partial)
-          ActiveSupport::Notifications.subscribe "render_partial.action_view", partials
+          async_partials = Middleware::AsyncSubscriber.new(partials)
+          ActiveSupport::Notifications.subscribe "render_partial.action_view", async_partials
 
           collections = Middleware::RenderSubscriber.new(c, c.series_name_for_render_collection)
-          ActiveSupport::Notifications.subscribe "render_collection.action_view", collections
+          async_collections = Middleware::AsyncSubscriber.new(collections)
+          ActiveSupport::Notifications.subscribe "render_collection.action_view", async_collections
         end
       end
     end

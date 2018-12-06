@@ -14,7 +14,7 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
     let(:start_time)   { Time.at(1_517_567_368) }
     let(:finish_time)  { Time.at(1_517_567_370) }
     let(:series_name) { "series_name" }
-    let(:payload) { { identifier: "index.html", count: 43, cache_hits: 42 } }
+    let(:payload) { { identifier: "index.html", count: 43, cache_hits: 42, location: "Foo#bar" } }
     let(:result) do
       {
         values:    {
@@ -31,16 +31,6 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
     end
 
     subject { described_class.new(config, series_name) }
-
-    before do
-      Thread.current[:_influxdb_rails_controller] = "Foo"
-      Thread.current[:_influxdb_rails_action]     = "bar"
-    end
-
-    after do
-      Thread.current[:_influxdb_rails_action]     = nil
-      Thread.current[:_influxdb_rails_controller] = nil
-    end
 
     context "successfully" do
       it "writes to InfluxDB" do

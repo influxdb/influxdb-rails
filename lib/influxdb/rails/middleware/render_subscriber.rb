@@ -37,16 +37,9 @@ module InfluxDB
           super && series_name.present?
         end
 
-        def location
-          [
-            Thread.current[:_influxdb_rails_controller],
-            Thread.current[:_influxdb_rails_action],
-          ].reject(&:blank?).join("#")
-        end
-
         def tags(payload)
           {
-            location:   location,
+            location:   payload[:location],
             filename:   payload[:identifier],
             count:      payload[:count],
             cache_hits: payload[:cache_hits],
