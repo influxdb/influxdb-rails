@@ -7,12 +7,13 @@ module InfluxDB
         private
 
         def tags(payload)
-          {
+          tags = {
             location:   location,
             filename:   payload[:identifier],
             count:      payload[:count],
             cache_hits: payload[:cache_hits],
-          }.reject { |_, value| value.blank? }
+          }
+          super(tags)
         end
       end
     end

@@ -19,12 +19,13 @@ module InfluxDB
 
         def tags(payload)
           query = InfluxDB::Rails::Sql::Query.new(payload)
-          {
+          tags = {
             location:   location,
             operation:  query.operation,
             class_name: query.class_name,
             name:       query.name,
           }
+          super(tags)
         end
       end
     end

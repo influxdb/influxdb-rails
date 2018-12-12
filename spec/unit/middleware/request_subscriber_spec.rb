@@ -1,4 +1,5 @@
 require "spec_helper"
+require "shared_examples/tags"
 
 RSpec.describe InfluxDB::Rails::Middleware::RequestSubscriber do
   let(:config) { InfluxDB::Rails::Configuration.new }
@@ -45,23 +46,7 @@ RSpec.describe InfluxDB::Rails::Middleware::RequestSubscriber do
         subject.call("unused", start, finish, "unused", payload)
       end
 
-      context "when tags_middleware is overwritten" do
-        before do
-          allow(config).to receive(:tags_middleware).and_return(tags_middleware)
-        end
-
-        let(:tags_middleware) { ->(tags) { tags.merge(static: "value") } }
-
-        it "processes tags throught the middleware" do
-          tags = data[:tags].merge(static: "value")
-
-          expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.controller", include(tags: tags))
-          expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.view", include(tags: tags))
-          expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.db", include(tags: tags))
-
-          subject.call("unused", start, finish, "unused", payload)
-        end
-      end
+      it_behaves_like "with additional tags", ["rails.controller", "rails.view", "rails.db"]
     end
 
     context "application_name is nil" do

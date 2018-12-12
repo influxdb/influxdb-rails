@@ -1,4 +1,5 @@
 require "spec_helper"
+require "shared_examples/tags"
 
 RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
   let(:config) { InfluxDB::Rails::Configuration.new }
@@ -11,11 +12,11 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
   end
 
   describe ".call" do
-    let(:start_time)   { Time.at(1_517_567_368) }
-    let(:finish_time)  { Time.at(1_517_567_370) }
+    let(:start)   { Time.at(1_517_567_368) }
+    let(:finish)  { Time.at(1_517_567_370) }
     let(:series_name) { "series_name" }
     let(:payload) { { identifier: "index.html", count: 43, cache_hits: 42 } }
-    let(:result) do
+    let(:data) do
       {
         values:    {
           value: 2000
@@ -44,22 +45,24 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
     context "successfully" do
       it "writes to InfluxDB" do
         expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
-          series_name, result
+          series_name, data
         )
-        subject.call("name", start_time, finish_time, "id", payload)
+        subject.call("name", start, finish, "id", payload)
       end
+
+      it_behaves_like "with additional tags", ["series_name"]
 
       context "with empty tags" do
         before do
           payload[:count] = nil
-          result[:tags].delete(:count)
+          data[:tags].delete(:count)
         end
 
         it "does not write empty tags" do
           expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
-            series_name, result
+            series_name, data
           )
-          subject.call("name", start_time, finish_time, "id", payload)
+          subject.call("name", start, finish, "id", payload)
         end
       end
 
@@ -68,7 +71,7 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
 
         it "does not write a data point" do
           expect_any_instance_of(InfluxDB::Client).not_to receive(:write_point)
-          subject.call("name", start_time, finish_time, "id", payload)
+          subject.call("name", start, finish, "id", payload)
         end
       end
     end
@@ -82,7 +85,7 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
       it "does log exceptions" do
         allow_any_instance_of(InfluxDB::Client).to receive(:write_point).and_raise("boom")
         expect(logger).to receive(:error).with(/boom/)
-        subject.call("name", start_time, finish_time, "id", payload)
+        subject.call("name", start, finish, "id", payload)
       end
     end
   end

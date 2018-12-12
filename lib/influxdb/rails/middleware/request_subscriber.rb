@@ -35,14 +35,15 @@ module InfluxDB
         end
 
         def tags(payload)
-          configuration.tags_middleware.call({
+          tags = {
             method:      "#{payload[:controller]}##{payload[:action]}",
             status:      payload[:status],
             format:      payload[:format],
             http_method: payload[:method],
             server:      Socket.gethostname,
             app_name:    configuration.application_name,
-          }.reject { |_, value| value.nil? })
+          }
+          super(tags)
         end
       end
     end

@@ -21,6 +21,10 @@ module InfluxDB
 
         private
 
+        def tags(tags)
+          configuration.tags_middleware.call(tags.reject { |_, value| value.nil? })
+        end
+
         def enabled?
           configuration.instrumentation_enabled? &&
             !configuration.ignore_current_environment?

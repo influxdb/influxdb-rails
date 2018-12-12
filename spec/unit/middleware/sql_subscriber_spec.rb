@@ -1,4 +1,5 @@
 require "spec_helper"
+require "shared_examples/tags"
 
 RSpec.describe InfluxDB::Rails::Middleware::SqlSubscriber do
   let(:config) { InfluxDB::Rails::Configuration.new }
@@ -11,11 +12,11 @@ RSpec.describe InfluxDB::Rails::Middleware::SqlSubscriber do
   end
 
   describe ".call" do
-    let(:start_time)   { Time.at(1_517_567_368) }
-    let(:finish_time)  { Time.at(1_517_567_370) }
-    let(:series_name) { "series_name" }
+    let(:start)   { Time.at(1_517_567_368) }
+    let(:finish)  { Time.at(1_517_567_370) }
+    let(:series_name) { "rails.sql" }
     let(:payload) { { sql: "SELECT * FROM POSTS WHERE id = 1", name: "Post Load", binds: %w[1 2 3] } }
-    let(:result) do
+    let(:data) do
       {
         values:    {
           value: 2000,
@@ -45,9 +46,9 @@ RSpec.describe InfluxDB::Rails::Middleware::SqlSubscriber do
     context "successfully" do
       it "writes to InfluxDB" do
         expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
-          series_name, result
+          series_name, data
         )
-        subject.call("name", start_time, finish_time, "id", payload)
+        subject.call("name", start, finish, "id", payload)
       end
 
       context "with not relevant queries" do
@@ -57,9 +58,11 @@ RSpec.describe InfluxDB::Rails::Middleware::SqlSubscriber do
 
         it "does not write to InfluxDB" do
           expect_any_instance_of(InfluxDB::Client).not_to receive(:write_point)
-          subject.call("name", start_time, finish_time, "id", payload)
+          subject.call("name", start, finish, "id", payload)
         end
       end
+
+      it_behaves_like "with additional tags", ["rails.sql"]
     end
 
     context "unsuccessfully" do
@@ -71,7 +74,7 @@ RSpec.describe InfluxDB::Rails::Middleware::SqlSubscriber do
       it "does log exceptions" do
         allow_any_instance_of(InfluxDB::Client).to receive(:write_point).and_raise("boom")
         expect(logger).to receive(:error).with(/boom/)
-        subject.call("name", start_time, finish_time, "id", payload)
+        subject.call("name", start, finish, "id", payload)
       end
     end
   end
