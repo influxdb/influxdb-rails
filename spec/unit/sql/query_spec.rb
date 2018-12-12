@@ -24,5 +24,6 @@ RSpec.describe InfluxDB::Rails::Sql::Query do
     it { expect(described_class.new(sql: "DELETE").track?).to be true }
     it { expect(described_class.new(sql: "SCHEMA").track?).to be false }
     it { expect(described_class.new(sql: "BEGIN").track?).to be false }
+    it { expect(described_class.new(sql: "SELECT", name: "SCHEMA").track?).to be false }
   end
 end

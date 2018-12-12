@@ -7,6 +7,7 @@ module InfluxDB
         attr_reader :query, :name
 
         TRACKED_SQL_COMMANDS = %w[SELECT INSERT UPDATE DELETE].freeze
+        UNTRACKED_NAMES = %w[SCHEMA].freeze
 
         def initialize(payload)
           @query = payload[:sql].to_s.dup.upcase
@@ -22,7 +23,8 @@ module InfluxDB
         end
 
         def track?
-          @track ||= query.start_with?(*TRACKED_SQL_COMMANDS)
+          @track ||= query.start_with?(*TRACKED_SQL_COMMANDS) &&
+                     !name.upcase.start_with?(*UNTRACKED_NAMES)
         end
       end
     end
