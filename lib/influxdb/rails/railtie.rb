@@ -23,8 +23,9 @@ module InfluxDB
 
         if defined?(ActiveSupport::Notifications)
           cache = lambda do |_, _, _, _, payload|
-            Thread.current[:_influxdb_rails_controller] = payload[:controller]
-            Thread.current[:_influxdb_rails_action]     = payload[:action]
+            current = InfluxDB::Rails.current
+            current.controller = payload[:controller]
+            current.action     = payload[:action]
           end
           ActiveSupport::Notifications.subscribe "start_processing.action_controller", &cache
 

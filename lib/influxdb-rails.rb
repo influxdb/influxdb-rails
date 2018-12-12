@@ -11,6 +11,7 @@ require "influxdb/rails/logger"
 require "influxdb/rails/exception_presenter"
 require "influxdb/rails/configuration"
 require "influxdb/rails/backtrace"
+require "influxdb/rails/context"
 require "influxdb/rails/rack"
 
 require "influxdb/rails/railtie" if defined?(Rails::Railtie)
@@ -58,6 +59,10 @@ module InfluxDB
 
       def configuration
         @configuration ||= InfluxDB::Rails::Configuration.new
+      end
+
+      def current
+        @current ||= InfluxDB::Rails::Context.new
       end
 
       def report_exception_unless_ignorable(ex, env = {})

@@ -27,9 +27,10 @@ module InfluxDB
         end
 
         def location
+          current = InfluxDB::Rails.current
           [
-            Thread.current[:_influxdb_rails_controller],
-            Thread.current[:_influxdb_rails_action],
+            current.controller,
+            current.action,
           ].reject(&:blank?).join("#")
         end
       end

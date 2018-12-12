@@ -20,8 +20,7 @@ module InfluxDB
           rescue StandardError => e
             log :error, "[InfluxDB::Rails] Unable to write points: #{e.message}"
           ensure
-            Thread.current[:_influxdb_rails_controller] = nil
-            Thread.current[:_influxdb_rails_action]     = nil
+            InfluxDB::Rails.current.reset
           end
         end
 

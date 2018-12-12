@@ -86,11 +86,14 @@ It is possible to disable the rendering series by setting the series_name to nil
   # config.series_name_for_render_collection   = nil
 ```
 
-You can also call through to the underlying `InfluxDB::Client` object to write arbitrary data like this:
+You can also call through to the underlying `InfluxDB::Client` object to write arbitrary data.
+If you do that, it might be usefull to add the current context to these custom data points which can get
+accessed with ``InfluxDB::Rails.current.location``.
+
 
 ``` ruby
 InfluxDB::Rails.client.write_point "events",
-  tags:   { url: "/foo", user_id: current_user.id },
+  tags:   { url: "/foo", user_id: current_user.id, location: InfluxDB::Rails.current.location },
   values: { value: 0 }
 ```
 

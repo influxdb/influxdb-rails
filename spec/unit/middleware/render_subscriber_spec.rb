@@ -33,13 +33,12 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
     subject { described_class.new(config, series_name) }
 
     before do
-      Thread.current[:_influxdb_rails_controller] = "Foo"
-      Thread.current[:_influxdb_rails_action]     = "bar"
+      InfluxDB::Rails.current.controller = "Foo"
+      InfluxDB::Rails.current.action = "bar"
     end
 
     after do
-      Thread.current[:_influxdb_rails_action]     = nil
-      Thread.current[:_influxdb_rails_controller] = nil
+      InfluxDB::Rails.current.reset
     end
 
     context "successfully" do
