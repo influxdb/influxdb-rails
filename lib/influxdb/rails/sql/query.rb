@@ -9,12 +9,12 @@ module InfluxDB
         TRACKED_SQL_COMMANDS = %w[SELECT INSERT UPDATE DELETE].freeze
 
         def initialize(payload)
-          @query = payload[:sql].to_s.dup
+          @query = payload[:sql].to_s.dup.upcase
           @name = payload[:name].to_s.dup
         end
 
         def operation
-          query.split.first.upcase
+          query.split.first
         end
 
         def class_name
