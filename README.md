@@ -136,13 +136,40 @@ By default, the following tags are sent for *non-exception series*
 
 ```ruby
 {
-  method:   "#{payload[:controller]}##{payload[:action]}",
-  server:   Socket.gethostname,
-  app_name: configuration.application_name,
+  method:      "#{payload[:controller]}##{payload[:action]}",
+  server:      Socket.gethostname,
+  app_name:    configuration.application_name,
+  http_method: payload[:method],
+  format:      payload[:format],
+  status:      payload[:status]
 }
 ```
+For the render series (``rails.render_partial``, ``rails.render_view`` and ``rails.render_collection``)
 
-and for the exceptions (series name `rails.exceptions`):
+```ruby
+  server:     Socket.gethostname,
+  app_name:   configuration.application_name,
+  location:   "#{payload[:controller]}##{payload[:action]}",
+  filename:   payload[:identifier],
+  count:      payload[:count],
+  cache_hits: payload[:cache_hits],
+```
+
+For the SQL series (``rails.sql``, disabled by default)
+
+```ruby
+  server:     Socket.gethostname,
+  app_name:   configuration.application_name,
+  location:   "#{payload[:controller]}##{payload[:action]}",,
+  operation:  "SELECT",
+  class_name: "USER",
+  name:       payload[:name],
+```
+
+For more information about the payload, have a look at the [official ActiveSupport documentation](https://guides.rubyonrails.org/active_support_instrumentation.html#process-action-action-controller).
+
+
+For the exceptions (series name `rails.exceptions`):
 
 ```ruby
 {
