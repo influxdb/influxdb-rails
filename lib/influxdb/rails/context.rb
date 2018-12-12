@@ -27,6 +27,15 @@ module InfluxDB
       def reset
         Thread.current[:_influxdb_rails_controller] = nil
         Thread.current[:_influxdb_rails_action] = nil
+        Thread.current[:_influxdb_rails_tags] = nil
+      end
+
+      def tags
+        Thread.current[:_influxdb_rails_tags] || {}
+      end
+
+      def tags=(tags)
+        Thread.current[:_influxdb_rails_tags] = tags
       end
     end
   end

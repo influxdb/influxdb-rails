@@ -116,6 +116,21 @@ InfluxDB::Rails.configure do |config|
 end
 ```
 
+If you want to add dynamically tags per request, you can access the ``InfluxDB::Rails.current.tags`` to
+do so. For instance, you could add the current user as tag to every data point.
+
+```ruby
+class ApplicationController
+
+  before_action :set_influx_tags
+
+  def set_influx_tags
+    InfluxDB::Rails.current.tags = { user: current_user.id }
+  end
+end
+
+```
+
 By default, the following tags are sent for *non-exception series*
 (`rails.controller`, `rails.view`, `rails.db` and `instrumentation`):
 

@@ -22,7 +22,8 @@ module InfluxDB
         private
 
         def tags(tags)
-          configuration.tags_middleware.call(tags.reject { |_, value| value.nil? })
+          merged_tags = tags.merge(InfluxDB::Rails.current.tags).reject { |_, value| value.nil? }
+          configuration.tags_middleware.call(merged_tags)
         end
 
         def enabled?
