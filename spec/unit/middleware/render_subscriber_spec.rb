@@ -19,13 +19,13 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
     let(:data) do
       {
         values:    {
-          value: 2000
-        },
-        tags:      {
-          filename:   "index.html",
-          location:   "Foo#bar",
+          value:      2000,
           count:      43,
           cache_hits: 42
+        },
+        tags:      {
+          filename: "index.html",
+          location: "Foo#bar",
         },
         timestamp: 1_517_567_370_000
       }
@@ -52,13 +52,13 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
 
       it_behaves_like "with additional tags", ["series_name"]
 
-      context "with empty tags" do
+      context "with an empty value" do
         before do
           payload[:count] = nil
-          data[:tags].delete(:count)
+          data[:values].delete(:count)
         end
 
-        it "does not write empty tags" do
+        it "does not write empty value" do
           expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
             series_name, data
           )
