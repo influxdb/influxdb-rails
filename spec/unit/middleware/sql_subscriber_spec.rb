@@ -63,6 +63,20 @@ RSpec.describe InfluxDB::Rails::Middleware::SqlSubscriber do
       end
 
       it_behaves_like "with additional tags", ["rails.sql"]
+
+      context "without location" do
+        before do
+          InfluxDB::Rails.current.reset
+        end
+
+        it "does use the default location" do
+          data[:tags] = data[:tags].merge(location: :raw)
+          expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
+            series_name, data
+          )
+          subject.call("name", start, finish, "id", payload)
+        end
+      end
     end
 
     context "unsuccessfully" do

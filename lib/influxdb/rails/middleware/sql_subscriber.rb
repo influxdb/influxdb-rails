@@ -17,6 +17,11 @@ module InfluxDB
           super.merge(sql: InfluxDB::Rails::Sql::Normalizer.new(payload[:sql]).perform)
         end
 
+        def location
+          result = super
+          result.empty? ? :raw : result
+        end
+
         def tags(payload)
           query = InfluxDB::Rails::Sql::Query.new(payload)
           tags = {
