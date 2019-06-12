@@ -39,10 +39,10 @@ RSpec.describe InfluxDB::Rails::Middleware::RequestSubscriber do
 
       it "sends metrics with taggings and timestamps" do
         expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
-          "rails.controller", data.deep_merge(values: { value: 2000 })
+          "rails.controller", data.deep_merge(values: { value: 2000 }, timestamp: InfluxDB::Rails.current_timestamp)
         )
-        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.view", data)
-        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.db", data)
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.view", data.merge(timestamp: InfluxDB::Rails.current_timestamp))
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.db", data.merge(timestamp: InfluxDB::Rails.current_timestamp))
 
         subject.call("unused", start, finish, "unused", payload)
       end
@@ -67,10 +67,10 @@ RSpec.describe InfluxDB::Rails::Middleware::RequestSubscriber do
 
       it "does not add the app_name tag to metrics" do
         expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
-          "rails.controller", data.merge(tags: tags).deep_merge(values: { value: 2000 })
+          "rails.controller", data.merge(tags: tags).deep_merge(values: { value: 2000 }, timestamp: InfluxDB::Rails.current_timestamp)
         )
-        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.view", data.merge(tags: tags))
-        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.db", data.merge(tags: tags))
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.view", data.merge(tags: tags, timestamp: InfluxDB::Rails.current_timestamp))
+        expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with("rails.db", data.merge(tags: tags, timestamp: InfluxDB::Rails.current_timestamp))
 
         subject.call("unused", start, finish, "unused", payload)
       end

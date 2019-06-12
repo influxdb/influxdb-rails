@@ -45,7 +45,7 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
     context "successfully" do
       it "writes to InfluxDB" do
         expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
-          series_name, data
+          series_name, data.merge(timestamp: InfluxDB::Rails.current_timestamp)
         )
         subject.call("name", start, finish, "id", payload)
       end
@@ -60,7 +60,7 @@ RSpec.describe InfluxDB::Rails::Middleware::RenderSubscriber do
 
         it "does not write empty value" do
           expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
-            series_name, data
+            series_name, data.merge(timestamp: InfluxDB::Rails.current_timestamp)
           )
           subject.call("name", start, finish, "id", payload)
         end

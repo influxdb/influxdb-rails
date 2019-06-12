@@ -21,7 +21,7 @@ module InfluxDB
             InfluxDB::Rails.client.write_point series_name,
                                                values:    values(started, finished, payload),
                                                tags:      tags(payload),
-                                               timestamp: timestamp(finished.utc)
+                                               timestamp: InfluxDB::Rails.current_timestamp
           rescue StandardError => e
             log :error, "[InfluxDB::Rails] Unable to write points: #{e.message}"
           end
@@ -34,10 +34,6 @@ module InfluxDB
           result.merge(InfluxDB::Rails.current.values).reject do |_, value|
             value.nil? || value == ""
           end
-        end
-
-        def timestamp(finished)
-          InfluxDB.convert_timestamp(finished.utc, configuration.time_precision)
         end
 
         def enabled?

@@ -46,7 +46,7 @@ RSpec.describe InfluxDB::Rails::Middleware::SqlSubscriber do
     context "successfully" do
       it "writes to InfluxDB" do
         expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
-          series_name, data
+          series_name, data.merge(timestamp: InfluxDB::Rails.current_timestamp)
         )
         subject.call("name", start, finish, "id", payload)
       end
@@ -72,7 +72,7 @@ RSpec.describe InfluxDB::Rails::Middleware::SqlSubscriber do
         it "does use the default location" do
           data[:tags] = data[:tags].merge(location: :raw)
           expect_any_instance_of(InfluxDB::Client).to receive(:write_point).with(
-            series_name, data
+            series_name, data.merge(timestamp: InfluxDB::Rails.current_timestamp)
           )
           subject.call("name", start, finish, "id", payload)
         end

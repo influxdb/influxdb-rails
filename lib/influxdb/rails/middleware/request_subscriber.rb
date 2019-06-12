@@ -7,7 +7,6 @@ module InfluxDB
         def call(_name, start, finish, _id, payload) # rubocop:disable Metrics/MethodLength
           return unless enabled?
 
-          finished = InfluxDB.convert_timestamp(finish.utc, configuration.time_precision)
           started = InfluxDB.convert_timestamp(start.utc, configuration.time_precision)
           tags = tags(payload)
           begin
@@ -16,7 +15,7 @@ module InfluxDB
                 series_name,
                 values:    values(value, started),
                 tags:      tags,
-                timestamp: finished
+                timestamp: InfluxDB::Rails.current_timestamp
             end
           rescue StandardError => e
             log :error, "[InfluxDB::Rails] Unable to write points: #{e.message}"
