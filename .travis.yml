@@ -26,6 +26,9 @@ matrix:
   exclude:
     # Rails > 5 not on MRI 2.4+
     - { rvm: "2.4",   gemfile: "gemfiles/Gemfile.rails-6.0.x" }
+    - { rvm: "ruby-head",   gemfile: "gemfiles/Gemfile.rails-5.2.x" }
+    - { rvm: "ruby-head",   gemfile: "gemfiles/Gemfile.rails-5.1.x" }
+    - { rvm: "ruby-head",   gemfile: "gemfiles/Gemfile.rails-5.0.x" }
 addons:
   apt:
     packages:
