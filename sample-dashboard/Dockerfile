@@ -1,11 +1,11 @@
-FROM opensuse/leap:15.1
+FROM opensuse/leap:15.2
 
 ENV NOKOGIRI_USE_SYSTEM_LIBRARIES 1
 RUN useradd -g users -p rails -d /home/rails -m rails
 RUN echo 'rails ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 RUN zypper -n addrepo -f https://dl.yarnpkg.com/rpm/yarn.repo; zypper --gpg-auto-import-keys refresh
-RUN zypper -n install --no-recommends ruby2.5-devel nodejs10 make gcc timezone sudo pkg-config sqlite3-devel libxml2-devel libxslt-devel yarn git-core curl
+RUN zypper -n install --no-recommends ruby2.5-devel nodejs10 make gcc-c++ timezone sudo pkg-config sqlite3-devel libxml2-devel libxslt-devel yarn git-core curl
 RUN zypper -n clean -a
 RUN gem install --no-format-executable --no-document rails -v '~> 6'
 
