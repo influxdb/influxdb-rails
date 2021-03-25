@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rdoc"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rspec-rails", ">= 3.0.0"
-  spec.add_development_dependency "rubocop", "~> 1.9.0"
+  spec.add_development_dependency "rubocop", "~> 1.12.0"
   spec.add_development_dependency "sqlite3"
   spec.add_development_dependency "tzinfo"
 end
