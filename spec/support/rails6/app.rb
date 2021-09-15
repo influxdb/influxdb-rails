@@ -76,7 +76,7 @@ end
 
 class ExceptionsController < ApplicationController
   def index
-    1 / 0
+    raise ActiveRecord::RecordNotFound
   end
 end
 

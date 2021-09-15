@@ -11,7 +11,8 @@ AllCops:
   - 'vendor/bundle/**/*'
   DisplayCopNames: true
   StyleGuideCopsOnly: false
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.5
+  NewCops: enable
 
 Layout/EmptyLinesAroundArguments:
   Enabled: false

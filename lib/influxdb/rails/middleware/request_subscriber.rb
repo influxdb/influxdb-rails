@@ -16,7 +16,7 @@ module InfluxDB
           {
             method:      "#{payload[:controller]}##{payload[:action]}",
             hook:        "process_action",
-            status:      payload[:status],
+            status:      status,
             format:      payload[:format],
             http_method: payload[:method],
             exception:   payload[:exception]&.first,
@@ -37,6 +37,14 @@ module InfluxDB
             start.utc,
             configuration.client.time_precision
           )
+        end
+
+        def status
+          if payload[:exception] && ::Rails::VERSION::MAJOR < 7
+            ActionDispatch::ExceptionWrapper.status_code_for_exception(payload[:exception].first)
+          else
+            payload[:status]
+          end
         end
       end
     end

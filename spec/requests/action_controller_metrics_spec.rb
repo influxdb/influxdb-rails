@@ -89,7 +89,8 @@ RSpec.describe "ActionController metrics", type: :request do
       tags: a_hash_including(
         method:    "ExceptionsController#index",
         hook:      "process_action",
-        exception: "ZeroDivisionError"
+        exception: "ActiveRecord::RecordNotFound",
+        status:    404
       )
     )
   end
