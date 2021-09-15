@@ -69,12 +69,10 @@ Reported tags:
   method:      "PostsController#index",
   http_method: "GET",
   format:      "html",
-  status:      ["200", ""],
+  status:      ["500"],
   exception:   "ArgumentError"
 }
 ```
-
-*Note*: If an exception happens during that particular action the `status` will be blank and the tag `exception` will contain the name of the exception class. The status is blank because we can't know how you handle the exception outside the action.
 
 ### Action View
 
