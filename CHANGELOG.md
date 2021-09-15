@@ -2,6 +2,11 @@
 
 For the full commit log, [see here](https://github.com/influxdata/influxdb-rails/commits/one-stable).
 
+## v1.0.3, released 2021-09-15
+
+- In case of unhandled exceptions, set status in measurements like Rails.logger does
+- Require Ruby 2.5
+
 ## v1.0.2, released 2021-04-13
 
 Fix passing booleans to custom tags.
