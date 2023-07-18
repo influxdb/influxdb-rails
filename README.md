@@ -1,5 +1,6 @@
-> :warning: You are looking at the README for the master branch of this gem.
-> See the latest [released version (1.0.1)](https://github.com/influxdata/influxdb-rails/tree/v1.0.1#readme)
+> :warning: You are looking at the README a development branch of this gem.
+> If you are using this gem you should have a look at the
+> latest [released version (1.0.3)](https://github.com/influxdata/influxdb-rails/tree/v1.0.3#readme)
 > instead.
 
 # influxdb-rails
