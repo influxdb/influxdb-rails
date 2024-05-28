@@ -47,14 +47,6 @@ RSpec/FilePath:
 RSpec/MultipleExpectations:
   Max: 2
 
-# Offense count: 15
-# Configuration parameters: EnforcedStyle, IgnoreSharedExamples.
-# SupportedStyles: always, named_only
-RSpec/NamedSubject:
-  Exclude:
-    - 'spec/unit/influx_db/rails/configuration_spec.rb'
-    - 'spec/unit/influx_db/rails/sql/query_spec.rb'
-
 # Offense count: 1
 # Configuration parameters: Include.
 # Include: **/*_spec*rb*, **/spec/**/*
