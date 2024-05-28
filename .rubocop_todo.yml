@@ -64,17 +64,6 @@ RSpec/RepeatedDescription:
   Exclude:
     - 'spec/requests/active_record_sql_metrics_spec.rb'
 
-# Offense count: 4
-# Configuration parameters: Include, CustomTransform, IgnoreMethods, IgnoreMetadata.
-# Include: **/*_spec.rb
-RSpec/SpecFilePathFormat:
-  Exclude:
-    - '**/spec/routing/**/*'
-    - 'spec/unit/block_instrumentation_spec.rb'
-    - 'spec/unit/configuration_spec.rb'
-    - 'spec/unit/sql/normalizer_spec.rb'
-    - 'spec/unit/sql/query_spec.rb'
-
 # Offense count: 1
 # Configuration parameters: Include.
 # Include: **/*_spec*rb*, **/spec/**/*
