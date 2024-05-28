@@ -67,7 +67,11 @@ module InfluxDB
       set_defaults(
         measurement_name:     "rails".freeze,
         ignored_hooks:        [].freeze,
-        tags_middleware:      ->(tags) { tags },
+        tags_middleware:      lambda { |tags|
+                                tags.reject do |_key, value|
+                                  value.nil? || (value.is_a?(String) && value.squish.empty?)
+                                end
+                              },
         rails_app_name:       nil,
         ignored_environments: %w[test cucumber selenium].freeze,
         environment:          ::Rails.env,

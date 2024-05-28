@@ -26,7 +26,7 @@ RSpec.describe InfluxDB::Rails::Tags do
 
     it "removes empty strings" do
       subject = described_class.new(config: config, tags: { hans: "", franz: "   " })
-      expect(subject.to_h).not_to a_hash_including(hans: "", franz: "   ")
+      expect(subject.to_h).not_to a_hash_including(:hans, :franz)
     end
 
     it "returns symbols" do
@@ -36,7 +36,7 @@ RSpec.describe InfluxDB::Rails::Tags do
 
     it "removes nil" do
       subject = described_class.new(config: config, tags: { hans: nil })
-      expect(subject.to_h).not_to a_hash_including(hans: nil)
+      expect(subject.to_h).not_to a_hash_including(:hans)
     end
 
     it "leaves arrays alone" do
