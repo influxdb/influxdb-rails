@@ -31,49 +31,21 @@ RSpec/DescribeClass:
     - '**/spec/views/**/*'
     - 'spec/integration/influxdb_rails_sends_metrics_spec.rb'
 
-# Offense count: 36
+# Offense count: 35
 # Configuration parameters: CountAsOne.
 RSpec/ExampleLength:
   Max: 19
 
-# Offense count: 5
+# Offense count: 1
 # Configuration parameters: Include, CustomTransform, IgnoreMethods, SpecSuffixOnly.
 # Include: **/*_spec*rb*, **/spec/**/*
 RSpec/FilePath:
   Exclude:
-    - 'spec/unit/block_instrumentation_spec.rb'
-    - 'spec/unit/configuration_spec.rb'
-    - 'spec/unit/sql/normalizer_spec.rb'
-    - 'spec/unit/sql/query_spec.rb'
     - 'spec/unit/tags.rb'
 
 # Offense count: 3
 RSpec/MultipleExpectations:
   Max: 2
-
-# Offense count: 15
-# Configuration parameters: EnforcedStyle, IgnoreSharedExamples.
-# SupportedStyles: always, named_only
-RSpec/NamedSubject:
-  Exclude:
-    - 'spec/unit/configuration_spec.rb'
-    - 'spec/unit/sql/query_spec.rb'
-
-# Offense count: 2
-RSpec/RepeatedDescription:
-  Exclude:
-    - 'spec/requests/active_record_sql_metrics_spec.rb'
-
-# Offense count: 4
-# Configuration parameters: Include, CustomTransform, IgnoreMethods, IgnoreMetadata.
-# Include: **/*_spec.rb
-RSpec/SpecFilePathFormat:
-  Exclude:
-    - '**/spec/routing/**/*'
-    - 'spec/unit/block_instrumentation_spec.rb'
-    - 'spec/unit/configuration_spec.rb'
-    - 'spec/unit/sql/normalizer_spec.rb'
-    - 'spec/unit/sql/query_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: Include.

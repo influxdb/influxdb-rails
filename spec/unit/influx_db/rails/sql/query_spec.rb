@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe InfluxDB::Rails::Sql::Query do
-  subject { described_class.new(payload) }
+  subject(:sql_query_with_payload) { described_class.new(payload) }
 
   let(:payload) do
     {
@@ -11,11 +11,11 @@ RSpec.describe InfluxDB::Rails::Sql::Query do
   end
 
   describe "#class_name" do
-    it { expect(subject.class_name).to eq("User") }
+    it { expect(sql_query_with_payload.class_name).to eq("User") }
   end
 
   describe "#operation" do
-    it { expect(subject.operation).to eq("SELECT") }
+    it { expect(sql_query_with_payload.operation).to eq("SELECT") }
   end
 
   describe "#track?" do
